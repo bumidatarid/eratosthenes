@@ -71,11 +71,9 @@ class CalculateCommand extends Command
         $smean = Statistics::mean($this->sunDistances);
         $sstddev = Statistics::standardDeviation($this->sunDistances);
 
-        dump($cmean);
-        dump($cstddev);
-        dump($smean);
-        dump($sstddev);
-        dump(count($this->circumferences));
+        $output->writeln(sprintf('Globe earth circumference, mean: %s km, stddev: %s', $cmean, $cstddev));
+        $output->writeln(sprintf('Flat earth sun distance, mean: %s km, stddev: %s', $smean, $sstddev));
+        $output->writeln(sprintf('Total data pairings: %s', count($this->circumferences)));
 
     }
 
