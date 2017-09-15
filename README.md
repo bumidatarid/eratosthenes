@@ -1,4 +1,4 @@
-eratosthenes
-============
+eratosthenes data analysis
+==========================
 
-A Symfony project created on September 13, 2017, 3:47 pm.
+Analyze sun angle data from website eratosthenes.eu, for both globe earth and flat earth model.
