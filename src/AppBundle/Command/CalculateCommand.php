@@ -50,6 +50,9 @@ class CalculateCommand extends Command
 
         foreach ($this->pairings as $pairing) {
             $circumference = $pairing->getCircumference();
+            // if ($circumference > 1000000) {
+            //     dump($pairing);
+            // }
             $this->circumferences[] = $circumference;
             $sunDistance = $pairing->getSunDistance();
             $this->sunDistances[] = $sunDistance;
@@ -80,6 +83,18 @@ class CalculateCommand extends Command
         $output->writeln(sprintf('stddev: %s', $sstddev));
         $output->writeln(sprintf('n: %s', $sn));
         $output->writeln(sprintf('confidence interval: %s ± %s', $smean, $sci));
+
+        $f = fopen('latitude2sundistance.dat', 'w');
+        foreach ($this->pairings as $pairing) {
+            fwrite($f, sprintf("%s %s\n", $pairing->getAverageLatitude(), $pairing->getSunDistance()));
+        }
+        fclose($f);
+
+        $f = fopen('latitude2circumference.dat', 'w');
+        foreach ($this->pairings as $pairing) {
+            fwrite($f, sprintf("%s %s\n", $pairing->getAverageLatitude(), $pairing->getCircumference()));
+        }
+        fclose($f);
     }
 
     protected function splitToPairings($date, $members)
