@@ -55,26 +55,31 @@ class CalculateCommand extends Command
             $this->sunDistances[] = $sunDistance;
         }
 
+        $z = 1.96; // 95%
+        $cn = count($this->circumferences);
         $cmean = Statistics::mean($this->circumferences);
-        $cstddev = Statistics::standardDeviation($this->circumferences);
-
-        $cmax = $cmean + $cstddev;
-        $cmin = $cmean - $cstddev;
+        $cstddev = Statistics::standardDeviation($this->circumferences, false);
+        $cci = $z * $cstddev / sqrt($cn);
 
         foreach ($this->pairings as $pairing) {
             $circumference = $pairing->getCircumference();
-            if ($circumference < $cmin or $circumference > $cmax) {
-                // dump($pairing);
-            }
         }
 
+        $sn = count($this->sunDistances);
         $smean = Statistics::mean($this->sunDistances);
-        $sstddev = Statistics::standardDeviation($this->sunDistances);
+        $sstddev = Statistics::standardDeviation($this->sunDistances, false);
+        $sci = $z * $sstddev / sqrt($sn);
 
-        $output->writeln(sprintf('Globe earth circumference, mean: %s km, stddev: %s', $cmean, $cstddev));
-        $output->writeln(sprintf('Flat earth sun distance, mean: %s km, stddev: %s', $smean, $sstddev));
-        $output->writeln(sprintf('Total data pairings: %s', count($this->circumferences)));
-
+        $output->writeln(sprintf('GLOBE EARTH CIRCUMFERENCE'));
+        $output->writeln(sprintf('mean: %s', $cmean));
+        $output->writeln(sprintf('stddev: %s', $cstddev));
+        $output->writeln(sprintf('n: %s', $cn));
+        $output->writeln(sprintf('confidence interval: %s ± %s', $cmean, $cci));
+        $output->writeln(sprintf('FLAT EARTH SUN DISTANCE'));
+        $output->writeln(sprintf('mean: %s', $smean));
+        $output->writeln(sprintf('stddev: %s', $sstddev));
+        $output->writeln(sprintf('n: %s', $sn));
+        $output->writeln(sprintf('confidence interval: %s ± %s', $smean, $sci));
     }
 
     protected function splitToPairings($date, $members)
