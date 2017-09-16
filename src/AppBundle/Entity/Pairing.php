@@ -19,12 +19,33 @@ class Pairing
         $angle1 = $this->measurement1->getAngle();
         $angle2 = $this->measurement2->getAngle();
 
-        if (abs($latitude1 - $latitude2) < 5) {
+        if (abs($latitude1 - $latitude2) <= 15) {
+            // echo sprintf("%s %s %s %s\n", $this->getId(), $latitude1, $latitude2, abs($latitude1 - $latitude2));
             throw new ContextErrorException('Invalid');
         }
-        if (abs($angle1 - $angle2) < 5) {
+        if (abs($angle1 - $angle2) == 0) {
             throw new ContextErrorException('Invalid');
         }
+    }
+
+    public function getId()
+    {
+        return sprintf('%s-%s', $this->measurement1->getId(), $this->measurement2->getId());
+    }
+
+    public function getLatitude1()
+    {
+        return $this->measurement1->getLatitude();
+    }
+
+    public function getLatitude2()
+    {
+        return $this->measurement2->getLatitude();
+    }
+
+    public function getAverageLatitude()
+    {
+        return ($this->getLatitude1() + $this->getLatitude2())/2;
     }
 
     private $circumference;
