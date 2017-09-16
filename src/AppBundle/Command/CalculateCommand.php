@@ -78,11 +78,13 @@ class CalculateCommand extends Command
         $output->writeln(sprintf('stddev: %s', $cstddev));
         $output->writeln(sprintf('n: %s', $cn));
         $output->writeln(sprintf('confidence interval: %s ± %s', $cmean, $cci));
+        $output->writeln(sprintf('coefficient of variance: %s', $cstddev / $cmean));
         $output->writeln(sprintf('FLAT EARTH SUN DISTANCE'));
         $output->writeln(sprintf('mean: %s', $smean));
         $output->writeln(sprintf('stddev: %s', $sstddev));
         $output->writeln(sprintf('n: %s', $sn));
         $output->writeln(sprintf('confidence interval: %s ± %s', $smean, $sci));
+        $output->writeln(sprintf('coefficient of variance: %s', $sstddev / $smean));
 
         $f = fopen('latitude2sundistance.dat', 'w');
         foreach ($this->pairings as $pairing) {
