@@ -36,6 +36,24 @@ class Measurement
         return $measurement;
     }
 
+    public static function newEquinox()
+    {
+        $equinox = (new self)
+            ->setId('e')
+            ->setCity('Pontianak')
+            ->setCountry('Indonesia')
+            ->setSchool('-')
+            ->setLatitude(0)
+            ->setLongitude(0)
+            ->setDate(new DateTime('2016-09-23'))
+            ->setGnomon(0)
+            ->setShadow(0)
+            ->setAngle(0)
+            ->setError(0)
+        ;
+        return $equinox;
+    }
+
     private function __construct() {}
 
     // public function getMonthDate()

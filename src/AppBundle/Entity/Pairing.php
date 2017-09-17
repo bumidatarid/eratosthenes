@@ -8,24 +8,35 @@ class Pairing
     private $measurement1;
     private $measurement2;
 
-    public function __construct($measurement1, $measurement2)
+    public static function new($measurement1, $measurement2)
     {
-        $this->measurement1 = $measurement1;
-        $this->measurement2 = $measurement2;
-
-        $latitude1 = $this->measurement1->getLatitude();
-        $latitude2 = $this->measurement2->getLatitude();
-
-        $angle1 = $this->measurement1->getAngle();
-        $angle2 = $this->measurement2->getAngle();
+        $latitude1 = $measurement1->getLatitude();
+        $latitude2 = $measurement2->getLatitude();
 
         if (abs($latitude1 - $latitude2) <= 15) {
-            // echo sprintf("%s %s %s %s\n", $this->getId(), $latitude1, $latitude2, abs($latitude1 - $latitude2));
             throw new Exception('Invalid');
         }
-        if (abs($angle1 - $angle2) == 0) {
+        return new self($measurement1, $measurement2);
+    }
+
+    public static function newWithEquinox($measurement)
+    {
+        $latitude = $measurement->getLatitude();
+
+        if (abs($latitude) <= 1) {
             throw new Exception('Invalid');
         }
+
+        $equinox = Measurement::newEquinox();
+        return new self($measurement, $equinox);
+    }
+
+    private function __construct($measurement1, $measurement2) {
+        if (abs($measurement1->getAngle() - $measurement2->getAngle()) == 0) {
+            throw new Exception('Invalid');
+        }
+        $this->measurement1 = $measurement1;
+        $this->measurement2 = $measurement2;
     }
 
     public function getId()

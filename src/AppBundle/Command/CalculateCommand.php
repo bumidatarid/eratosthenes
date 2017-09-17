@@ -62,7 +62,7 @@ class CalculateCommand extends Command
         foreach ($combinations as $combination) {
             if (count($combination) < 2) continue;
             try {
-                $pairing = new Pairing(array_pop($combination), array_pop($combination));
+                $pairing = Pairing::new(array_pop($combination), array_pop($combination));
                 if (count($combination) > 0) {
                     continue;
                 }
