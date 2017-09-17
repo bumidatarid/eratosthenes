@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Entity;
-use Symfony\Component\Debug\Exception\ContextErrorException;
+use Exception;
 
 class Pairing
 {
@@ -21,10 +21,10 @@ class Pairing
 
         if (abs($latitude1 - $latitude2) <= 15) {
             // echo sprintf("%s %s %s %s\n", $this->getId(), $latitude1, $latitude2, abs($latitude1 - $latitude2));
-            throw new ContextErrorException('Invalid');
+            throw new Exception('Invalid');
         }
         if (abs($angle1 - $angle2) == 0) {
-            throw new ContextErrorException('Invalid');
+            throw new Exception('Invalid');
         }
     }
 
@@ -46,6 +46,11 @@ class Pairing
     public function getAverageLatitude()
     {
         return ($this->getLatitude1() + $this->getLatitude2())/2;
+    }
+
+    public function getSliceId()
+    {
+        return int($this->getAverageLatitude() / 5);
     }
 
     private $circumference;

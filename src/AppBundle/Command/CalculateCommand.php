@@ -7,16 +7,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\Measurement;
 use AppBundle\Entity\Pairing;
+use AppBundle\Entity\Population;
 use Math\Combinatorics\Combination;
 use Symfony\Component\Debug\Exception\ContextErrorException;
-use Oefenweb\Statistics\Statistics;
 use Exception;
 
 class CalculateCommand extends Command
 {
-    private $pairings = [];
+    private $population;
     private $circumferences = [];
     private $sunDistances = [];
+    private $slices = [];
+    private $sliceCalculations = [];
 
     protected function configure()
     {
@@ -44,62 +46,16 @@ class CalculateCommand extends Command
             }
         }
 
+        $population = new Population;
         foreach ($dates as $date => $members) {
-            $this->splitToPairings($date, $members);
+            $this->population = $this->saveToPopulation($population, $date, $members);
         }
 
-        foreach ($this->pairings as $pairing) {
-            $circumference = $pairing->getCircumference();
-            // if ($circumference > 1000000) {
-            //     dump($pairing);
-            // }
-            $this->circumferences[] = $circumference;
-            $sunDistance = $pairing->getSunDistance();
-            $this->sunDistances[] = $sunDistance;
-        }
-
-        $z = 1.96; // 95%
-        $cn = count($this->circumferences);
-        $cmean = Statistics::mean($this->circumferences);
-        $cstddev = Statistics::standardDeviation($this->circumferences, false);
-        $cci = $z * $cstddev / sqrt($cn);
-
-        foreach ($this->pairings as $pairing) {
-            $circumference = $pairing->getCircumference();
-        }
-
-        $sn = count($this->sunDistances);
-        $smean = Statistics::mean($this->sunDistances);
-        $sstddev = Statistics::standardDeviation($this->sunDistances, false);
-        $sci = $z * $sstddev / sqrt($sn);
-
-        $output->writeln(sprintf('GLOBE EARTH CIRCUMFERENCE'));
-        $output->writeln(sprintf('mean: %s', $cmean));
-        $output->writeln(sprintf('stddev: %s', $cstddev));
-        $output->writeln(sprintf('n: %s', $cn));
-        $output->writeln(sprintf('confidence interval: %s ± %s', $cmean, $cci));
-        $output->writeln(sprintf('coefficient of variance: %s', $cstddev / $cmean));
-        $output->writeln(sprintf('FLAT EARTH SUN DISTANCE'));
-        $output->writeln(sprintf('mean: %s', $smean));
-        $output->writeln(sprintf('stddev: %s', $sstddev));
-        $output->writeln(sprintf('n: %s', $sn));
-        $output->writeln(sprintf('confidence interval: %s ± %s', $smean, $sci));
-        $output->writeln(sprintf('coefficient of variance: %s', $sstddev / $smean));
-
-        $f = fopen('latitude2sundistance.dat', 'w');
-        foreach ($this->pairings as $pairing) {
-            fwrite($f, sprintf("%s %s\n", $pairing->getAverageLatitude(), $pairing->getSunDistance()));
-        }
-        fclose($f);
-
-        $f = fopen('latitude2circumference.dat', 'w');
-        foreach ($this->pairings as $pairing) {
-            fwrite($f, sprintf("%s %s\n", $pairing->getAverageLatitude(), $pairing->getCircumference()));
-        }
-        fclose($f);
+        $population->calculate();
+        $population->printData($output);
     }
 
-    protected function splitToPairings($date, $members)
+    protected function saveToPopulation($population, $date, $members)
     {
         // dump([$date, count($members)]);
         $combinations = Combination::get($members, 2);
@@ -110,8 +66,9 @@ class CalculateCommand extends Command
                 if (count($combination) > 0) {
                     continue;
                 }
-                $this->pairings[] = $pairing;
-            } catch (ContextErrorException $e) {
+                $population->addPairing($pairing);
+            } catch (Exception $e) {
+                // echo $e->getMessage();
                 continue;
             }
         }
