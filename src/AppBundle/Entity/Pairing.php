@@ -27,6 +27,14 @@ class Pairing
             throw new Exception('Invalid');
         }
 
+        if (
+            $measurement->getDate()->format('m-d') != '09-23'
+            and $measurement->getDate()->format('m-d') != '03-20'
+        )
+        {
+            throw new Exception('Invalid');
+        }
+
         $equinox = Measurement::newEquinox();
         return new self($measurement, $equinox);
     }
@@ -106,5 +114,81 @@ class Pairing
 
         $this->sunDistance = $sunDistance;
         return $sunDistance;
+    }
+
+    /**
+     * Gets the value of measurement1.
+     *
+     * @return mixed
+     */
+    public function getMeasurement1()
+    {
+        return $this->measurement1;
+    }
+
+    /**
+     * Sets the value of measurement1.
+     *
+     * @param mixed $measurement1 the measurement1
+     *
+     * @return self
+     */
+    public function setMeasurement1($measurement1)
+    {
+        $this->measurement1 = $measurement1;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of measurement2.
+     *
+     * @return mixed
+     */
+    public function getMeasurement2()
+    {
+        return $this->measurement2;
+    }
+
+    /**
+     * Sets the value of measurement2.
+     *
+     * @param mixed $measurement2 the measurement2
+     *
+     * @return self
+     */
+    public function setMeasurement2($measurement2)
+    {
+        $this->measurement2 = $measurement2;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of circumference.
+     *
+     * @param mixed $circumference the circumference
+     *
+     * @return self
+     */
+    public function setCircumference($circumference)
+    {
+        $this->circumference = $circumference;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of sunDistance.
+     *
+     * @param mixed $sunDistance the sun distance
+     *
+     * @return self
+     */
+    public function setSunDistance($sunDistance)
+    {
+        $this->sunDistance = $sunDistance;
+
+        return $this;
     }
 }

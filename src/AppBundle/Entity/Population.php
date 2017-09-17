@@ -83,6 +83,30 @@ class Population
         fclose($f);
     }
 
+    public function saveLatitudeToSunDistanceEquinoxData($filename)
+    {
+        $f = fopen($filename, 'w');
+        foreach ($this->pairings as $pairing) {
+            fwrite($f, sprintf("%s %s\n",
+                $pairing->getMeasurement1()->getLatitude(),
+                $pairing->getSunDistance()
+            ));
+        }
+        fclose($f);
+    }
+
+    public function saveLatitudeToCircumferenceEquinoxData($filename)
+    {
+        $f = fopen($filename, 'w');
+        foreach ($this->pairings as $pairing) {
+            fwrite($f, sprintf("%s %s\n",
+                $pairing->getMeasurement1()->getLatitude(),
+                $pairing->getCircumference()
+            ));
+        }
+        fclose($f);
+    }
+
     public function saveLatitudeToCircumferenceData($filename)
     {
         $f = fopen($filename, 'w');

@@ -17,3 +17,7 @@
 /web/bundles/
 *lock*
 *.sublime-workspace
+equinoxcircumference.dat
+equinoxsundistance.dat
+equinoxcircumference.png
+equinoxsundistance.png
