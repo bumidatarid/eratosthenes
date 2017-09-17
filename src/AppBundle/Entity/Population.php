@@ -60,6 +60,20 @@ class Population
         $output->writeln(sprintf('coefficient of variance: %s', $this->sunDistanceCoefficientOfVariation));
     }
 
+    public function sliceData()
+    {
+        $slices = [];
+        foreach ($this->pairings as $pairing) {
+            $sliceId = $pairing->getSliceId();
+            if (!isset($slices[$sliceId])) {
+                $slices[$sliceId] = new self;
+            }
+            $slices[$sliceId]->addPairing($pairing);
+        }
+        ksort($slices);
+        return $slices;
+    }
+
     public function saveLatitudeToSunDistanceData($filename)
     {
         $f = fopen($filename, 'w');
@@ -129,6 +143,54 @@ class Population
     public function setSunDistances($sunDistances)
     {
         $this->sunDistances = $sunDistances;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of sunDistanceMean.
+     *
+     * @return mixed
+     */
+    public function getSunDistanceMean()
+    {
+        return $this->sunDistanceMean;
+    }
+
+    /**
+     * Sets the value of sunDistanceMean.
+     *
+     * @param mixed $sunDistanceMean the sun distance mean
+     *
+     * @return self
+     */
+    public function setSunDistanceMean($sunDistanceMean)
+    {
+        $this->sunDistanceMean = $sunDistanceMean;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of sunDistanceStandardDeviation.
+     *
+     * @return mixed
+     */
+    public function getSunDistanceStandardDeviation()
+    {
+        return $this->sunDistanceStandardDeviation;
+    }
+
+    /**
+     * Sets the value of sunDistanceStandardDeviation.
+     *
+     * @param mixed $sunDistanceStandardDeviation the sun distance standard deviation
+     *
+     * @return self
+     */
+    public function setSunDistanceStandardDeviation($sunDistanceStandardDeviation)
+    {
+        $this->sunDistanceStandardDeviation = $sunDistanceStandardDeviation;
 
         return $this;
     }

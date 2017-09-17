@@ -50,7 +50,7 @@ class Pairing
 
     public function getSliceId()
     {
-        return int($this->getAverageLatitude() / 5);
+        return round($this->getAverageLatitude() / 5);
     }
 
     private $circumference;
