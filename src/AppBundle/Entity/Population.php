@@ -33,13 +33,13 @@ class Population
         $this->circumferenceN = count($this->circumferences);
         $this->circumferenceMean = Statistics::mean($this->circumferences);
         $this->circumferenceStandardDeviation = Statistics::standardDeviation($this->circumferences, false);
-        $this->circumferenceCoefficientOfVariation = $this->z * $this->circumferenceStandardDeviation / sqrt($this->circumferenceN);
+        $this->circumferenceConfidenceInterval = $this->z * $this->circumferenceStandardDeviation / sqrt($this->circumferenceN);
         $this->circumferenceCoefficientOfVariation = $this->circumferenceStandardDeviation / $this->circumferenceMean;
 
         $this->sunDistanceN = count($this->sunDistances);
         $this->sunDistanceMean = Statistics::mean($this->sunDistances);
         $this->sunDistanceStandardDeviation = Statistics::standardDeviation($this->sunDistances, false);
-        $this->sunDistanceCoefficientOfVariation = $this->z * $this->sunDistanceStandardDeviation / sqrt($this->sunDistanceN);
+        $this->sunDistanceConfidenceInterval = $this->z * $this->sunDistanceStandardDeviation / sqrt($this->sunDistanceN);
         $this->sunDistanceCoefficientOfVariation = $this->sunDistanceStandardDeviation / $this->sunDistanceMean;
     }
 
